@@ -1,16 +1,24 @@
 {
-  "manifest_version": 2,
-
-  "name": "UnClickbait",
-  "description": "This extensions replaces clickbait titles with better ones",
-  "version": "1.0",
-
-  "browser_action": {
-    "default_icon": "icon.png",
-    "default_popup": "popup.html"
-  },
-  "permissions": [
-    "activeTab",
-    "https://unclickbait-jrutila.c9.io"
-  ]
+ "manifest_version": 2,
+ "name": "UnClickbait",
+ "description": "This extensions replaces clickbait titles with better ones",
+ "version": "1.0",
+ "icons": { "128": "icon.png" },
+ "page_action": {
+  "default_name": "unclickbait",
+  "default_icon": "icon.png",
+  "default_popup": "popup.html"
+ },
+ "permissions": [ "webNavigation", "tabs", "http://*/*", "https://*/*" ],
+ "background": { "scripts": ["background.js"] },
+ "content_scripts": [
+  { "matches": ["http://*/*", "https://*/*"], "js": ["content_script.js"] },
+ {
+  "all_frames": true,
+  "js": [ "jquery-1.11.3.min.js" ],
+  "matches": [ "*://*/*" ],
+  "run_at": "document_start"
+  }
+ ],
+ "content_security_policy": "default-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src https://maps.googleapis.com; img-src https://maps.google.com"
 }
