@@ -19,7 +19,8 @@ module.exports = {
     var text = opts.text;
     
     Clickbait.findOrCreate({ url: url}).then(function(clickbait) {
-      Title.create({ text: text }).then(function(title) {
+      delete opts['url'];
+      Title.create(opts).then(function(title) {
         clickbait.titles.add(title);
         clickbait.save();
         cb(clickbait);

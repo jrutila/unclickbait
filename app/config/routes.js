@@ -57,6 +57,6 @@ module.exports.routes = {
   'get /auth/:provider/callback': 'AuthController.callback',
   'get /auth/:provider/:action': 'AuthController.callback',
   
+  'post /clickbait/search': 'ClickbaitController.search',
   'post /clickbait/add': 'ClickbaitController.add',
-
 };

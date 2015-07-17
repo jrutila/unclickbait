@@ -9,6 +9,8 @@ module.exports = {
 
   attributes: {
     text : { type: 'string' },
+    originalText: { type: 'string' },
+    href: { type: 'string' },
     score : { type: 'int', defaultsTo: 0 },
     clickbait: { model: "Clickbait" },
   }
