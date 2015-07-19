@@ -9,6 +9,9 @@
   "default_icon": "icon.png",
   "default_popup": "popup.html"
  },
+ "web_accessible_resources": [
+  "images/*.png"
+ ],
  "permissions": [ "webNavigation", "tabs", "http://*/*", "https://*/*" ],
  "background": { "scripts": ["background.js"] },
  "content_scripts": [
@@ -20,5 +23,5 @@
   "run_at": "document_start"
   }
  ],
- "content_security_policy": "default-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src https://maps.googleapis.com; img-src https://maps.google.com"
+ "content_security_policy": "default-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src https://unclickbait-jrutila.c9.io; img-src https://maps.google.com"
 }
