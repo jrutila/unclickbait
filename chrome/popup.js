@@ -1,6 +1,7 @@
 $(function(){
  var link = chrome.extension.getBackgroundPage().selectedLink;
  $("#text").val(link.text);
+ $("#originalText").val(link.text);
 });
 $(function(){
  $("button").click(function(){
@@ -12,7 +13,7 @@ $(function(){
   //  text: the proposed new title
   // }
   var data = chrome.extension.getBackgroundPage().selectedLink;
-  data.originalText = data.text;
+  data.originalText = $("#originalText").val();
   data.text = $("#text").val();
   console.log(data);
   var xhr = new XMLHttpRequest();
