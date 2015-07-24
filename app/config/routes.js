@@ -59,4 +59,6 @@ module.exports.routes = {
   
   'post /clickbait/search': 'ClickbaitController.search',
   'post /clickbait/add': 'ClickbaitController.add',
+  
+  'get /selectors.json': 'DomainController.selectors',
 };
