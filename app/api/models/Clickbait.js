@@ -9,7 +9,7 @@ var Promise = require("bluebird");
 module.exports = {
 
   attributes: {
-    url: "string",
+    url: "array",
     titles: {
       collection: "Title",
       via: "clickbait"
@@ -20,14 +20,15 @@ module.exports = {
       var url = opts.url;
       var text = opts.text;
       
-      Clickbait.findOrCreate({ url: url}).then(function(clickbait) {
-        delete opts['url'];
+      delete opts['url'];
+      
+      Clickbait.findOrCreate({ url: url }).then(function(clickbait, a) {
         Title.create(opts).then(function(title) {
           clickbait.titles.add(title);
           clickbait.save();
           resolve(clickbait);
         });
-        Domain.checkDomain({ url: url });
+        Domain.checkDomain({ url: Array.isArray(url) ? url[0] : url });
       });
     });
   }
