@@ -1,6 +1,7 @@
 if (window == top) {
   chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
     var sele = undefined;
+    var links = [];
     var xhr = new XMLHttpRequest();
     // TODO: Get the url from options or something
     xhr.open("GET", "https://unclickbait-jrutila.c9.io/selectors.json", true);
@@ -21,8 +22,13 @@ if (window == top) {
             href = window.location.origin + href;
           urls.push(href);
         });
+
+        // TODO: For some reason, if the link text is replaced below,
+        // it will show the replaced text as the original text.
+        // I think that is wrong
+        links = findLinks(sele);
+        sendResponse(links);
         
-        console.log(urls);
         var data = { url: urls };
         var xh = new XMLHttpRequest();
         // TODO: Get the url from options or something
@@ -33,7 +39,13 @@ if (window == top) {
             var res = JSON.parse(xh.responseText);
             for (var r in res) {
               var cb = res[r];
-              var $elem = $("[href='"+cb.url.replace(window.location.origin, "")+"'], [href='"+cb.url+"'] ");
+              var ss = "";
+              for (var u in cb.url) {
+                var cburl = cb.url[u];
+                ss += "[href='"+cburl.replace(window.location.origin, "")+"'], [href='"+cburl+"'], ";
+              }
+              ss = ss.replace(/, $/, '');
+              var $elem = $(ss);
               // TODO: Replace only the origin text and not for example the time info
               var replText = cb.titles[0].text + "<img src='"+chrome.extension.getURL("images/clickbait.png")+"'/>";
               var origText = cb.titles[0].originalText;
@@ -56,8 +68,6 @@ if (window == top) {
           // TODO: Error case
         };
         xh.send(JSON.stringify(data));
-
-        sendResponse(findLinks(sele));
 
       }
     // TODO: Error case

@@ -4,17 +4,25 @@ $(function(){
  $("#originalText").val(link.text);
 });
 $(function(){
+ var currentUrl = "";
+ chrome.tabs.getSelected(function(tab) { currentUrl = tab.url; });
  $("button").click(function(){
   // data is something like this:
   // {
-  //  url: the url of the page
+  //  url: the url of the page (can be an array or urls)
   //  href: (optional) where did the user get here
   //  originalText: (optional) what was in the original link
   //  text: the proposed new title
   // }
-  var data = chrome.extension.getBackgroundPage().selectedLink;
+  var link = chrome.extension.getBackgroundPage().selectedLink;
+  var data = {};
+  data.ref = link.ref;
   data.originalText = $("#originalText").val();
   data.text = $("#text").val();
+  if (link.url != currentUrl)
+    data.url = [ link.url, currentUrl ];
+  else
+    data.url = link.url;
   console.log(data);
   var xhr = new XMLHttpRequest();
   // TODO: Get the url from options or something
