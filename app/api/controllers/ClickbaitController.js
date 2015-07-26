@@ -16,12 +16,23 @@ module.exports = {
 	},
 	search: function(req, res) {
 		var urls = req.body.url;
-		Clickbait.find()
-			.where({ url: urls })
-			.populate("titles")
-			.then(function(clickbaits) {
-				res.send(clickbaits);
-			});
+		Clickbait.native(function(err, collection) {
+			if (err) return res.serverError(err);
+			
+			collection.find({ url: { $in: urls }})
+				.toArray(function(err, results) {
+					var idList = results.map(function(c) {
+						return c._id;
+					});
+					
+					Clickbait.find()
+						.where({ id: idList })
+						.populate("titles")
+						.then(function(clickbaits) {
+							res.send(clickbaits);
+						});
+				});
+		});
 	},
 };
 
