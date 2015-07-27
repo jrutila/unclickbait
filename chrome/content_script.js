@@ -47,7 +47,7 @@ if (window == top) {
               ss = ss.replace(/, $/, '');
               var $elem = $(ss);
               // TODO: Replace only the origin text and not for example the time info
-              var replText = cb.titles[0].text + "<img src='"+chrome.extension.getURL("images/clickbait.png")+"'/>";
+              var replText = cb.titles[0].text + "<img class='clickbait' src='"+chrome.extension.getURL("images/clickbait.png")+"'/>";
               var origText = cb.titles[0].originalText;
 
               var none = true;
