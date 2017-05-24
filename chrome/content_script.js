@@ -9,34 +9,39 @@ if (window == top) {
     xhr.onreadystatechange = function(msg, res) {
       if (xhr.readyState == 4) {
         var link_selector = JSON.parse(xhr.responseText);
-        var sele = link_selector[window.location.hostname];
+        var sele = link_selector[window.location.hostname]        
 
          console.log("SELE: "+sele);
          if (typeof sele === "undefined")
-          sele = "a";
+          sele = [["a", ""]];         
 
         var urls = [];
-        $(sele).each(function() {
-          var href = $(this).attr("href");
-          if (! (/^http/).test(href))
-            href = window.location.origin + href;
-          urls.push(href);
-        });
+        var replSele = {};
+        for (var i = 0; i < sele.length; i++) {
+          $(sele[i][0]).each(function() {
+            var href = $(this).attr("href");
+            if (! (/^http/).test(href))
+              href = window.location.origin + href;
+            urls.push(href);            
+          });
+          replSele[sele[i][0]] = sele[i][1];
+        }
+
 
         // TODO: For some reason, if the link text is replaced below,
         // it will show the replaced text as the original text.
         // I think that is wrong
-        links = findLinks(sele);
-        sendResponse(links);
+        //links = findLinks(sele);
+        //sendResponse(links);
         
         var data = { url: urls };
         var xh = new XMLHttpRequest();
         // TODO: Get the url from options or something
-        xh.open("POST", "https://unclickbait-jrutila.c9.io/clickbait/search", true);
+        xh.open("POST", "https://unclickbait-jrutila.c9.io/api/clickbaits/search", true);
         xh.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xh.onreadystatechange = function(msg, res) {
           if (xh.readyState == 4) {
-            var res = JSON.parse(xh.responseText);
+            var res = JSON.parse(xh.responseText).clickbaits;
             for (var r in res) {
               var cb = res[r];
               var ss = "";
@@ -53,10 +58,17 @@ if (window == top) {
               var none = true;
 
               $elem.each(function(i) {
-                if ($(this).html().search(origText) > -1) {
-                  none = false;
-                  var currText = $(this).html();
-                  $(this).html(currText.replace(origText, replText));
+                for (var selec in replSele)
+                {
+                	if ($(this).is(selec))
+                	{
+                		var $text = $(replSele[selec], this);
+                		if ($text.html().search(origText) > -1) {
+                  			none = false;
+                  			var currText = $(this).html();
+                  			$text.html(replText);
+                		}
+                	}
                 }
               });
 
